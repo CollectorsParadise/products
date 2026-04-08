@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Test Product 1",
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "name": "Test Product 2",
+    "image": "https://via.placeholder.com/150/ff0000"
+  }
+]
