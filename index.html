@@ -16,6 +16,7 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
 .brand-logo{width:48px;height:48px;border-radius:10px;object-fit:cover}
 .brand h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .brand span{font-size:12px;color:var(--text-dim);display:block;margin-top:2px}
+.header-actions{display:flex;gap:8px;align-items:center}
 .controls{padding:16px 24px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .search{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;width:280px;outline:none;transition:border .2s}
 .search:focus{border-color:var(--accent)}
@@ -55,8 +56,16 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
 .chart-container{background:var(--bg);border-radius:8px;padding:16px}
 .chart-container h3{font-size:13px;color:var(--text-dim);margin-bottom:12px}
 .empty{text-align:center;padding:60px 24px;color:var(--text-dim);font-size:15px}
-.theme-toggle{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
-.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle,.refresh-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.theme-toggle:hover,.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
+.theme-toggle{width:36px;height:36px}
+.refresh-btn{padding:6px 14px;gap:6px;font-size:13px;font-weight:500;height:36px}
+.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
+.refresh-btn.loading .refresh-icon{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--text);z-index:300;display:none;align-items:center;gap:8px;box-shadow:0 8px 24px #00000060}
+.toast.show{display:flex}
+.toast .progress{font-weight:600;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -65,10 +74,16 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
     <img src="/images/CP LOGO.png" alt="Collector's Paradise" class="brand-logo">
     <div><h1>Collector's Paradise</h1><span>Japanese Pokémon Booster Box Market</span></div>
   </div>
-  <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">
-    <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  </button>
+  <div class="header-actions">
+    <button class="refresh-btn" id="refresh-btn" title="Fetch live prices via AI search">
+      <svg class="refresh-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      <span class="refresh-label">Refresh Prices</span>
+    </button>
+    <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
 </header>
 <div class="controls">
   <input class="search" type="text" placeholder="Search by name or set code..." id="search">
@@ -85,9 +100,10 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
     <button class="modal-close" id="modal-close">&times;</button>
     <div class="modal-header"><img id="m-img"><div><div class="modal-title" id="m-name"></div><div class="card-code" id="m-code"></div><div class="card-price" id="m-price"></div><div id="m-pill"></div></div></div>
     <div class="modal-stats" id="m-stats"></div>
-    <div class="chart-container"><h3>Price History (Estimated Market Trajectory)</h3><canvas id="m-chart"></canvas></div>
+    <div class="chart-container"><h3>Price History (Market Trajectory)</h3><canvas id="m-chart"></canvas></div>
   </div>
 </div>
+<div class="toast" id="toast"><span class="progress" id="toast-progress"></span><span id="toast-msg"></span></div>
 <script>
 const MARKET={
 "Scarlet ex Booster Box (sv1S)":{release:"2023-01-20",price:42,mom:-1.2,low:36,high:58,packs:30,era:"sv",history:[56,54,52,49,47,45,43,42,41,40,41,42]},
@@ -202,6 +218,106 @@ document.getElementById("theme-toggle").onclick=()=>{
   html.setAttribute("data-theme",isLight?"dark":"light");
   document.querySelector(".icon-moon").style.display=isLight?"block":"none";
   document.querySelector(".icon-sun").style.display=isLight?"none":"block";
+};
+
+// --- Live Price Refresh via Anthropic API + Web Search ---
+const toast=document.getElementById("toast");
+const toastProgress=document.getElementById("toast-progress");
+const toastMsg=document.getElementById("toast-msg");
+function showToast(prog,msg){toast.classList.add("show");toastProgress.textContent=prog;toastMsg.textContent=msg;}
+function hideToast(){toast.classList.remove("show");}
+
+async function fetchPricesBatch(names){
+  const list=names.map(n=>{const code=n.match(/\(([^)]+)\)/)?.[1]||"";return`- "${n}"`;}).join("\n");
+
+  const sysPrompt=`You are a price lookup assistant. You search for current market prices of Japanese Pokemon TCG booster boxes on TCGPlayer, eBay sold listings, and other marketplaces. After searching, you MUST respond with ONLY a valid JSON array and absolutely nothing else. No markdown, no backticks, no explanation, no preamble. Just the raw JSON array.`;
+
+  const userPrompt=`Search TCGPlayer.com for the current USD market price of each of these Japanese Pokemon booster boxes. Search for each one individually on TCGPlayer under "Pokemon Japan" products.
+
+Products to look up:
+${list}
+
+After searching, respond with ONLY a JSON array where each element is:
+{"name":"EXACT product name from my list above","price":NUMBER,"low":NUMBER,"high":NUMBER}
+
+Rules:
+- "name" must be copied EXACTLY from my list
+- "price" = current market price in USD as a whole number (no dollar sign)
+- "low" = lowest listing or recent sold price
+- "high" = highest listing or recent sold price
+- If you cannot find a price, use 0 for that product
+- Output ONLY the JSON array. No other text before or after it.`;
+
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:2000,
+        system:sysPrompt,
+        tools:[{type:"web_search_20250305",name:"web_search"}],
+        messages:[{role:"user",content:userPrompt}]
+      })
+    });
+    const data=await res.json();
+    if(!data.content)return[];
+
+    // Extract all text blocks and find the one containing JSON
+    const textBlocks=data.content.filter(b=>b.type==="text").map(b=>b.text);
+    for(let i=textBlocks.length-1;i>=0;i--){
+      const t=textBlocks[i].replace(/```json|```/g,"").trim();
+      // Find JSON array in the text
+      const start=t.indexOf("[");
+      const end=t.lastIndexOf("]");
+      if(start!==-1&&end>start){
+        try{
+          const parsed=JSON.parse(t.substring(start,end+1));
+          if(Array.isArray(parsed))return parsed;
+        }catch{}
+      }
+    }
+    return[];
+  }catch(e){console.error("API error:",e);return[];}
+}
+
+document.getElementById("refresh-btn").onclick=async function(){
+  const btn=this;
+  if(btn.disabled)return;
+  btn.disabled=true;btn.classList.add("loading");
+  btn.querySelector(".refresh-label").textContent="Fetching...";
+
+  const names=Object.keys(MARKET);
+  const batchSize=5;
+  const batches=[];
+  for(let i=0;i<names.length;i+=batchSize)batches.push(names.slice(i,i+batchSize));
+
+  let updated=0;
+  for(let i=0;i<batches.length;i++){
+    showToast(`${i+1}/${batches.length}`,`Searching prices for batch ${i+1}...`);
+    try{
+      const results=await fetchPricesBatch(batches[i]);
+      console.log(`Batch ${i+1} results:`,results);
+      results.forEach(r=>{
+        const d=MARKET[r.name];
+        if(d&&r.price>0){
+          const oldPrice=d.price;
+          d.price=r.price;
+          if(r.low>0)d.low=Math.min(r.low,d.low);
+          if(r.high>0)d.high=Math.max(r.high,d.high);
+          d.mom=oldPrice>0?Math.round(((r.price-oldPrice)/oldPrice)*1000)/10:0;
+          d.history.push(r.price);
+          updated++;
+        }
+      });
+    }catch(e){console.error("Batch error:",e);}
+  }
+
+  render();
+  showToast("Done!",`Updated ${updated} of ${names.length} prices.`);
+  setTimeout(hideToast,4000);
+  btn.disabled=false;btn.classList.remove("loading");
+  btn.querySelector(".refresh-label").textContent="Refresh Prices";
 };
 </script>
 </body>
