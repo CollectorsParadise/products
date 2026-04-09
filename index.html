@@ -56,16 +56,9 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
 .chart-container{background:var(--bg);border-radius:8px;padding:16px}
 .chart-container h3{font-size:13px;color:var(--text-dim);margin-bottom:12px}
 .empty{text-align:center;padding:60px 24px;color:var(--text-dim);font-size:15px}
-.theme-toggle,.refresh-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
-.theme-toggle:hover,.refresh-btn:hover{border-color:var(--accent);color:var(--accent)}
-.theme-toggle{width:36px;height:36px}
-.refresh-btn{padding:6px 14px;gap:6px;font-size:13px;font-weight:500;height:36px}
-.refresh-btn:disabled{opacity:.5;cursor:not-allowed}
-.refresh-btn.loading .refresh-icon{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:13px;color:var(--text);z-index:300;display:none;align-items:center;gap:8px;box-shadow:0 8px 24px #00000060}
-.toast.show{display:flex}
-.toast .progress{font-weight:600;color:var(--accent)}
+.theme-toggle{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;width:36px;height:36px}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.last-updated{font-size:11px;color:var(--text-dim);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -75,10 +68,7 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
     <div><h1>Collector's Paradise</h1><span>Japanese Pokémon Booster Box Market</span></div>
   </div>
   <div class="header-actions">
-    <button class="refresh-btn" id="refresh-btn" title="Fetch live prices via AI search">
-      <svg class="refresh-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-      <span class="refresh-label">Refresh Prices</span>
-    </button>
+    <span class="last-updated" id="last-updated">Prices updated: loading...</span>
     <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">
       <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
       <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -103,42 +93,41 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
     <div class="chart-container"><h3>Price History (Market Trajectory)</h3><canvas id="m-chart"></canvas></div>
   </div>
 </div>
-<div class="toast" id="toast"><span class="progress" id="toast-progress"></span><span id="toast-msg"></span></div>
 <script>
 const MARKET={
-"Scarlet ex Booster Box (sv1S)":{release:"2023-01-20",price:42,mom:-1.2,low:36,high:58,packs:30,era:"sv",history:[56,54,52,49,47,45,43,42,41,40,41,42]},
-"Violet ex Booster Box (sv1V)":{release:"2023-01-20",price:41,mom:-1.5,low:35,high:56,packs:30,era:"sv",history:[54,53,50,48,46,44,42,41,40,39,40,41]},
-"Triplet Beat Booster Box (sv1a)":{release:"2023-03-10",price:60,mom:3.2,low:38,high:63,packs:30,era:"sv",history:[39,41,43,45,48,50,53,55,56,57,58,60]},
-"Clay Burst Booster Box (sv2D)":{release:"2023-04-14",price:50,mom:1.8,low:35,high:55,packs:30,era:"sv",history:[37,38,39,42,44,46,48,48,47,48,49,50]},
-"Snow Hazard Booster Box (sv2P)":{release:"2023-04-14",price:46,mom:1.5,low:34,high:49,packs:30,era:"sv",history:[35,37,38,39,41,42,43,44,45,44,45,46]},
-"Pokemon Card 151 Booster Box (sv2a)":{release:"2023-06-16",price:87,mom:4.5,low:44,high:92,packs:20,era:"sv",history:[46,49,53,58,63,67,72,75,78,82,84,87]},
-"Ruler of the Black Flame Booster Box (sv3)":{release:"2023-07-28",price:56,mom:3.0,low:39,high:59,packs:30,era:"sv",history:[41,42,44,46,48,49,51,52,53,54,55,56]},
-"Raging Surf Booster Box (sv3a)":{release:"2023-09-22",price:53,mom:2.8,low:37,high:56,packs:30,era:"sv",history:[39,38,40,42,44,46,48,49,50,51,52,53]},
-"Ancient Roar Booster Box (sv4K)":{release:"2023-10-27",price:39,mom:-2.1,low:33,high:49,packs:30,era:"sv",history:[48,46,44,42,43,42,40,39,38,37,38,39]},
-"Future Flash Booster Box (sv4M)":{release:"2023-10-27",price:38,mom:-0.5,low:35,high:48,packs:30,era:"sv",history:[46,45,43,42,40,39,37,36,36,37,37,38]},
-"Shiny Treasure ex Booster Box (sv4a)":{release:"2023-12-01",price:65,mom:2.0,low:46,high:69,packs:10,era:"sv",history:[49,51,53,55,56,58,60,61,63,62,64,65]},
-"Wild Force Booster Box (sv5K)":{release:"2024-01-26",price:39,mom:1.0,low:33,high:42,packs:30,era:"sv",history:[37,36,35,34,34,33,34,35,36,37,38,39]},
-"Crimson Haze Booster Box (sv5A)":{release:"2024-03-22",price:35,mom:-1.5,low:32,high:39,packs:30,era:"sv",history:[38,37,37,36,35,35,34,34,35,36,36,35]},
-"Cyber Judge Booster Box (sv5M)":{release:"2024-03-22",price:42,mom:2.2,low:34,high:43,packs:30,era:"sv",history:[35,35,36,37,37,38,39,39,40,40,41,42]},
-"Mask of Change Booster Box (sv6)":{release:"2024-04-26",price:39,mom:1.2,low:34,high:42,packs:30,era:"sv",history:[39,38,37,35,34,34,35,35,37,37,38,39]},
-"Night Wanderer Booster Box (sv6a)":{release:"2024-06-07",price:42,mom:3.1,low:33,high:44,packs:30,era:"sv",history:[34,33,35,35,36,37,37,38,39,40,41,42]},
-"Stellar Miracle Booster Box (sv7)":{release:"2024-07-19",price:38,mom:0.5,low:34,high:40,packs:30,era:"sv",history:[39,38,37,35,34,34,35,35,36,37,37,38]},
-"Paradise Dragona Booster Box (sv7a)":{release:"2024-09-13",price:40,mom:1.0,low:35,high:42,packs:30,era:"sv",history:[39,39,37,36,35,36,37,37,38,39,39,40]},
-"Super Electric Breaker Booster Box (sv8)":{release:"2024-10-18",price:37,mom:-0.8,low:34,high:40,packs:30,era:"sv",history:[39,39,38,37,37,35,35,34,35,35,36,37]},
-"Terastal Festival ex Booster Box (sv8a)":{release:"2024-12-06",price:44,mom:2.5,low:37,high:46,packs:10,era:"sv",history:[39,39,38,37,38,39,39,41,42,42,43,44]},
-"Battle Partners Booster Box (sv9)":{release:"2025-01-24",price:37,mom:3.5,low:32,high:38,packs:30,era:"sv",history:[35,35,34,35,35,34,35,35,36,35,36,37]},
-"Heat Wave Arena Booster Box (sv9a)":{release:"2025-03-14",price:35,mom:0.8,low:32,high:37,packs:30,era:"sv",history:[36,35,35,34,33,32,33,34,34,35,34,35]},
-"Glory of Team Rocket Booster Box (sv10)":{release:"2025-04-18",price:46,mom:5.2,low:37,high:46,packs:30,era:"sv",history:[37,38,39,41,42,42,43,44,44,44,45,46]},
-"Black Bolt Booster Box (sv11B)":{release:"2025-06-06",price:37,mom:0,low:37,high:37,packs:30,era:"sv",history:[37]},
-"Black Bolt Deluxe Booster Box (sv11B)":{release:"2025-06-06",price:56,mom:0,low:56,high:56,packs:30,era:"sv",history:[56]},
-"White Flare Booster Box (sv11w)":{release:"2025-06-06",price:37,mom:0,low:37,high:37,packs:30,era:"sv",history:[37]},
-"White Flare Deluxe Booster Box (sv11w)":{release:"2025-06-06",price:56,mom:0,low:56,high:56,packs:30,era:"sv",history:[56]},
-"Mega Brave Booster Box (m1L)":{release:"2025-08-01",price:37,mom:0,low:37,high:37,packs:30,era:"m",history:[37]},
-"Mega Symphonia Booster Box (m1S)":{release:"2025-08-01",price:37,mom:0,low:37,high:37,packs:30,era:"m",history:[37]},
-"Inferno X Booster Box (M2)":{release:"2025-09-26",price:37,mom:0,low:37,high:37,packs:30,era:"m",history:[37]},
-"Mega Dream ex Booster Box (M2a)":{release:"2025-11-28",price:37,mom:0,low:37,high:37,packs:10,era:"m",history:[37]},
-"Munikis Zero Booster Box (M3)":{release:"2026-01-23",price:37,mom:0,low:37,high:37,packs:30,era:"m",history:[37]},
-"Ninja Spinner Booster Box (M4)":{release:"2026-03-13",price:37,mom:0,low:37,high:37,packs:30,era:"m",history:[37]}
+"Scarlet ex Booster Box (sv1S)":{release:"2023-01-20",price:34,mom:-5.6,low:34,high:90,packs:30,era:"sv",history:[85,78,70,62,55,50,46,42,40,38,36,34]},
+"Violet ex Booster Box (sv1V)":{release:"2023-01-20",price:40,mom:-4.8,low:35,high:140,packs:30,era:"sv",history:[120,105,90,78,68,60,52,48,45,43,42,40]},
+"Triplet Beat Booster Box (sv1a)":{release:"2023-03-10",price:53,mom:1.9,low:38,high:100,packs:30,era:"sv",history:[90,80,70,62,55,50,46,44,46,48,52,53]},
+"Clay Burst Booster Box (sv2D)":{release:"2023-04-14",price:60,mom:3.4,low:35,high:160,packs:30,era:"sv",history:[140,120,100,85,70,58,48,42,45,50,58,60]},
+"Snow Hazard Booster Box (sv2P)":{release:"2023-04-14",price:52,mom:2.0,low:34,high:160,packs:30,era:"sv",history:[140,115,95,78,65,55,45,40,42,46,51,52]},
+"Pokemon Card 151 Booster Box (sv2a)":{release:"2023-06-16",price:350,mom:4.5,low:55,high:380,packs:20,era:"sv",history:[55,65,85,110,145,180,220,260,290,310,335,350]},
+"Ruler of the Black Flame Booster Box (sv3)":{release:"2023-07-28",price:33,mom:-2.9,low:33,high:80,packs:30,era:"sv",history:[75,68,60,52,46,42,38,36,35,34,34,33]},
+"Raging Surf Booster Box (sv3a)":{release:"2023-09-22",price:43,mom:2.4,low:33,high:80,packs:30,era:"sv",history:[72,65,55,48,42,38,35,33,35,38,42,43]},
+"Ancient Roar Booster Box (sv4K)":{release:"2023-10-27",price:33,mom:-2.9,low:33,high:70,packs:30,era:"sv",history:[65,58,50,45,42,40,38,36,35,34,34,33]},
+"Future Flash Booster Box (sv4M)":{release:"2023-10-27",price:31,mom:-3.1,low:31,high:70,packs:30,era:"sv",history:[65,56,48,42,40,38,36,35,34,33,32,31]},
+"Shiny Treasure ex Booster Box (sv4a)":{release:"2023-12-01",price:34,mom:-5.6,low:34,high:75,packs:10,era:"sv",history:[70,65,58,52,48,44,42,40,38,37,36,34]},
+"Wild Force Booster Box (sv5K)":{release:"2024-01-26",price:33,mom:-2.9,low:33,high:70,packs:30,era:"sv",history:[65,58,50,45,42,40,38,36,35,34,34,33]},
+"Crimson Haze Booster Box (sv5A)":{release:"2024-03-22",price:37,mom:2.8,low:33,high:75,packs:30,era:"sv",history:[68,58,50,44,40,37,35,34,33,34,36,37]},
+"Cyber Judge Booster Box (sv5M)":{release:"2024-03-22",price:32,mom:-3.0,low:32,high:70,packs:30,era:"sv",history:[65,55,48,42,40,38,36,35,34,33,33,32]},
+"Mask of Change Booster Box (sv6)":{release:"2024-04-26",price:42,mom:2.4,low:35,high:65,packs:30,era:"sv",history:[60,55,50,45,42,40,38,36,35,38,40,42]},
+"Night Wanderer Booster Box (sv6a)":{release:"2024-06-07",price:55,mom:3.8,low:35,high:65,packs:30,era:"sv",history:[58,52,46,42,40,38,36,35,40,45,53,55]},
+"Stellar Miracle Booster Box (sv7)":{release:"2024-07-19",price:50,mom:2.0,low:38,high:60,packs:30,era:"sv",history:[55,52,48,44,42,40,38,40,42,45,49,50]},
+"Paradise Dragona Booster Box (sv7a)":{release:"2024-09-13",price:68,mom:4.6,low:40,high:72,packs:30,era:"sv",history:[55,50,46,42,40,42,45,50,55,60,65,68]},
+"Super Electric Breaker Booster Box (sv8)":{release:"2024-10-18",price:107,mom:5.9,low:40,high:110,packs:30,era:"sv",history:[42,45,50,58,65,72,80,85,90,95,101,107]},
+"Terastal Festival ex Booster Box (sv8a)":{release:"2024-12-06",price:102,mom:4.1,low:55,high:105,packs:10,era:"sv",history:[58,62,68,72,76,80,84,88,92,95,98,102]},
+"Battle Partners Booster Box (sv9)":{release:"2025-01-24",price:64,mom:3.2,low:42,high:78,packs:30,era:"sv",history:[45,48,50,52,55,58,60,58,56,58,62,64]},
+"Heat Wave Arena Booster Box (sv9a)":{release:"2025-03-14",price:92,mom:6.9,low:45,high:95,packs:30,era:"sv",history:[48,52,58,62,68,72,76,80,82,86,86,92]},
+"Glory of Team Rocket Booster Box (sv10)":{release:"2025-04-18",price:88,mom:4.8,low:45,high:120,packs:30,era:"sv",history:[110,105,95,88,80,75,70,72,76,80,84,88]},
+"Black Bolt Booster Box (sv11B)":{release:"2025-06-06",price:64,mom:-4.5,low:60,high:150,packs:30,era:"sv",history:[140,130,115,100,90,82,76,72,70,68,67,64]},
+"Black Bolt Deluxe Booster Box (sv11B)":{release:"2025-06-06",price:95,mom:-3.1,low:90,high:180,packs:30,era:"sv",history:[170,160,145,130,120,112,108,105,102,100,98,95]},
+"White Flare Booster Box (sv11w)":{release:"2025-06-06",price:64,mom:-3.0,low:60,high:140,packs:30,era:"sv",history:[130,120,108,95,86,80,75,72,70,68,66,64]},
+"White Flare Deluxe Booster Box (sv11w)":{release:"2025-06-06",price:95,mom:-2.1,low:90,high:170,packs:30,era:"sv",history:[160,150,138,125,115,108,105,102,100,98,97,95]},
+"Mega Brave Booster Box (m1L)":{release:"2025-08-01",price:42,mom:-4.5,low:40,high:65,packs:30,era:"m",history:[60,58,55,52,50,48,46,45,44,44,44,42]},
+"Mega Symphonia Booster Box (m1S)":{release:"2025-08-01",price:42,mom:-4.5,low:40,high:65,packs:30,era:"m",history:[60,58,55,52,50,48,46,45,44,44,44,42]},
+"Inferno X Booster Box (M2)":{release:"2025-09-26",price:175,mom:5.4,low:50,high:180,packs:30,era:"m",history:[55,68,85,100,115,128,140,148,155,162,166,175]},
+"Mega Dream ex Booster Box (M2a)":{release:"2025-11-28",price:98,mom:3.2,low:60,high:105,packs:10,era:"m",history:[65,70,75,80,82,85,88,90,92,94,95,98]},
+"Munikis Zero Booster Box (M3)":{release:"2026-01-23",price:63,mom:-5.9,low:60,high:85,packs:30,era:"m",history:[80,75,72,68,63]},
+"Ninja Spinner Booster Box (M4)":{release:"2026-03-13",price:40,mom:0,low:38,high:45,packs:30,era:"m",history:[40]}
 };
 
 const fmt=v=>"$"+v.toFixed(2);
@@ -146,6 +135,26 @@ let products=[], chart=null;
 
 fetch("/products.json").then(r=>r.json()).then(data=>{products=data;render()}).catch(()=>{
   products=Object.keys(MARKET).map(name=>({name,image:`/images/${name}.png`}));render();
+});
+
+// Load live eBay prices and merge into MARKET
+fetch("/prices-live.json").then(r=>r.json()).then(data=>{
+  if(data.products){
+    for(const[name,info]of Object.entries(data.products)){
+      if(MARKET[name]&&info.price>0){
+        MARKET[name].price=info.price;
+        MARKET[name].low=Math.min(info.low,MARKET[name].low);
+        MARKET[name].high=Math.max(info.high,MARKET[name].high);
+        MARKET[name].mom=info.mom||0;
+        if(info.history&&info.history.length>0)MARKET[name].history=info.history;
+      }
+    }
+    const d=new Date(data.lastUpdated);
+    document.getElementById("last-updated").textContent="Prices updated: "+d.toLocaleDateString("en",{month:"short",day:"numeric",year:"numeric"})+" (eBay sold)";
+    render();
+  }
+}).catch(()=>{
+  document.getElementById("last-updated").textContent="Prices: fallback estimates";
 });
 
 function render(){
@@ -218,106 +227,6 @@ document.getElementById("theme-toggle").onclick=()=>{
   html.setAttribute("data-theme",isLight?"dark":"light");
   document.querySelector(".icon-moon").style.display=isLight?"block":"none";
   document.querySelector(".icon-sun").style.display=isLight?"none":"block";
-};
-
-// --- Live Price Refresh via Anthropic API + Web Search ---
-const toast=document.getElementById("toast");
-const toastProgress=document.getElementById("toast-progress");
-const toastMsg=document.getElementById("toast-msg");
-function showToast(prog,msg){toast.classList.add("show");toastProgress.textContent=prog;toastMsg.textContent=msg;}
-function hideToast(){toast.classList.remove("show");}
-
-async function fetchPricesBatch(names){
-  const list=names.map(n=>{const code=n.match(/\(([^)]+)\)/)?.[1]||"";return`- "${n}"`;}).join("\n");
-
-  const sysPrompt=`You are a price lookup assistant. You search for current market prices of Japanese Pokemon TCG booster boxes on TCGPlayer, eBay sold listings, and other marketplaces. After searching, you MUST respond with ONLY a valid JSON array and absolutely nothing else. No markdown, no backticks, no explanation, no preamble. Just the raw JSON array.`;
-
-  const userPrompt=`Search TCGPlayer.com for the current USD market price of each of these Japanese Pokemon booster boxes. Search for each one individually on TCGPlayer under "Pokemon Japan" products.
-
-Products to look up:
-${list}
-
-After searching, respond with ONLY a JSON array where each element is:
-{"name":"EXACT product name from my list above","price":NUMBER,"low":NUMBER,"high":NUMBER}
-
-Rules:
-- "name" must be copied EXACTLY from my list
-- "price" = current market price in USD as a whole number (no dollar sign)
-- "low" = lowest listing or recent sold price
-- "high" = highest listing or recent sold price
-- If you cannot find a price, use 0 for that product
-- Output ONLY the JSON array. No other text before or after it.`;
-
-  try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:2000,
-        system:sysPrompt,
-        tools:[{type:"web_search_20250305",name:"web_search"}],
-        messages:[{role:"user",content:userPrompt}]
-      })
-    });
-    const data=await res.json();
-    if(!data.content)return[];
-
-    // Extract all text blocks and find the one containing JSON
-    const textBlocks=data.content.filter(b=>b.type==="text").map(b=>b.text);
-    for(let i=textBlocks.length-1;i>=0;i--){
-      const t=textBlocks[i].replace(/```json|```/g,"").trim();
-      // Find JSON array in the text
-      const start=t.indexOf("[");
-      const end=t.lastIndexOf("]");
-      if(start!==-1&&end>start){
-        try{
-          const parsed=JSON.parse(t.substring(start,end+1));
-          if(Array.isArray(parsed))return parsed;
-        }catch{}
-      }
-    }
-    return[];
-  }catch(e){console.error("API error:",e);return[];}
-}
-
-document.getElementById("refresh-btn").onclick=async function(){
-  const btn=this;
-  if(btn.disabled)return;
-  btn.disabled=true;btn.classList.add("loading");
-  btn.querySelector(".refresh-label").textContent="Fetching...";
-
-  const names=Object.keys(MARKET);
-  const batchSize=5;
-  const batches=[];
-  for(let i=0;i<names.length;i+=batchSize)batches.push(names.slice(i,i+batchSize));
-
-  let updated=0;
-  for(let i=0;i<batches.length;i++){
-    showToast(`${i+1}/${batches.length}`,`Searching prices for batch ${i+1}...`);
-    try{
-      const results=await fetchPricesBatch(batches[i]);
-      console.log(`Batch ${i+1} results:`,results);
-      results.forEach(r=>{
-        const d=MARKET[r.name];
-        if(d&&r.price>0){
-          const oldPrice=d.price;
-          d.price=r.price;
-          if(r.low>0)d.low=Math.min(r.low,d.low);
-          if(r.high>0)d.high=Math.max(r.high,d.high);
-          d.mom=oldPrice>0?Math.round(((r.price-oldPrice)/oldPrice)*1000)/10:0;
-          d.history.push(r.price);
-          updated++;
-        }
-      });
-    }catch(e){console.error("Batch error:",e);}
-  }
-
-  render();
-  showToast("Done!",`Updated ${updated} of ${names.length} prices.`);
-  setTimeout(hideToast,4000);
-  btn.disabled=false;btn.classList.remove("loading");
-  btn.querySelector(".refresh-label").textContent="Refresh Prices";
 };
 </script>
 </body>
