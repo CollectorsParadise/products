@@ -1,10 +1,134 @@
 [
   {
-    "name": "Test Product 1",
-    "image": "images/Battle Partners Booster Box (sv9).png"
+    "name": "Ancient Roar Booster Box (sv4K)",
+    "image": "/images/Ancient Roar Booster Box (sv4K).png"
   },
   {
-    "name": "Test Product 2",
-    "image": "https://via.placeholder.com/150/ff0000"
+    "name": "Battle Partners Booster Box (sv9)",
+    "image": "/images/Battle Partners Booster Box (sv9).png"
+  },
+  {
+    "name": "Black Bolt Booster Box (sv11B)",
+    "image": "/images/Black Bolt Booster Box (sv11B).png"
+  },
+  {
+    "name": "Black Bolt Deluxe Booster Box (sv11B)",
+    "image": "/images/Black Bolt Deluxe Booster Box (sv11B).png"
+  },
+  {
+    "name": "Clay Burst Booster Box (sv2D)",
+    "image": "/images/Clay Burst Booster Box (sv2D).png"
+  },
+  {
+    "name": "Crimson Haze Booster Box (sv5A)",
+    "image": "/images/Crimson Haze Booster Box (sv5A).png"
+  },
+  {
+    "name": "Cyber Judge Booster Box (sv5M)",
+    "image": "/images/Cyber Judge Booster Box (sv5M).png"
+  },
+  {
+    "name": "Future Flash Booster Box (sv4M)",
+    "image": "/images/Future Flash Booster Box (sv4M).png"
+  },
+  {
+    "name": "Glory of Team Rocket Booster Box (sv10)",
+    "image": "/images/Glory of Team Rocket Booster Box (sv10).png"
+  },
+  {
+    "name": "Heat Wave Arena Booster Box (sv9a)",
+    "image": "/images/Heat Wave Arena Booster Box (sv9a).png"
+  },
+  {
+    "name": "Inferno X Booster Box (M2)",
+    "image": "/images/Inferno X Booster Box (M2).png"
+  },
+  {
+    "name": "Mask of Change Booster Box (sv6)",
+    "image": "/images/Mask of Change Booster Box (sv6).png"
+  },
+  {
+    "name": "Mega Brave Booster Box (m1L)",
+    "image": "/images/Mega Brave Booster Box (m1L).png"
+  },
+  {
+    "name": "Mega Dream ex Booster Box (M2a)",
+    "image": "/images/Mega Dream ex Booster Box (M2a).png"
+  },
+  {
+    "name": "Mega Symphonia Booster Box (m1S)",
+    "image": "/images/Mega Symphonia Booster Box (m1S).png"
+  },
+  {
+    "name": "Munikis Zero Booster Box (M3)",
+    "image": "/images/Munikis Zero Booster Box (M3).png"
+  },
+  {
+    "name": "Night Wanderer Booster Box (sv6a)",
+    "image": "/images/Night Wanderer Booster Box (sv6a).png"
+  },
+  {
+    "name": "Ninja Spinner Booster Box (M4)",
+    "image": "/images/Ninja Spinner Booster Box (M4).png"
+  },
+  {
+    "name": "Paradise Dragona Booster Box (sv7a)",
+    "image": "/images/Paradise Dragona Booster Box (sv7a).png"
+  },
+  {
+    "name": "Pokemon Card 151 Booster Box (sv2a)",
+    "image": "/images/Pokemon Card 151 Booster Box (sv2a).png"
+  },
+  {
+    "name": "Raging Surf Booster Box (sv3a)",
+    "image": "/images/Raging Surf Booster Box (sv3a).png"
+  },
+  {
+    "name": "Ruler of the Black Flame Booster Box (sv3)",
+    "image": "/images/Ruler of the Black Flame Booster Box (sv3).png"
+  },
+  {
+    "name": "Scarlet ex Booster Box (sv1S)",
+    "image": "/images/Scarlet ex Booster Box (sv1S).png"
+  },
+  {
+    "name": "Shiny Treasure ex Booster Box (sv4a)",
+    "image": "/images/Shiny Treasure ex Booster Box (sv4a).png"
+  },
+  {
+    "name": "Snow Hazard Booster Box (sv2P)",
+    "image": "/images/Snow Hazard Booster Box (sv2P).png"
+  },
+  {
+    "name": "Stellar Miracle Booster Box (sv7)",
+    "image": "/images/Stellar Miracle Booster Box (sv7).png"
+  },
+  {
+    "name": "Super Electric Breaker Booster Box (sv8)",
+    "image": "/images/Super Electric Breaker Booster Box (sv8).png"
+  },
+  {
+    "name": "Terastal Festival ex Booster Box (sv8a)",
+    "image": "/images/Terastal Festival ex Booster Box (sv8a).png"
+  },
+  {
+    "name": "Triplet Beat Booster Box (sv1a)",
+    "image": "/images/Triplet Beat Booster Box (sv1a).png"
+  },
+  {
+    "name": "Violet ex Booster Box (sv1V)",
+    "image": "/images/Violet ex Booster Box (sv1V).png"
+  },
+  {
+    "name": "White Flare Booster Box (sv11w)",
+    "image": "/images/White Flare Booster Box (sv11w).png"
+  },
+  {
+    "name": "White Flare Deluxe Booster Box (sv11w)",
+    "image": "/images/White Flare Deluxe Booster Box (sv11w).png"
+  },
+  {
+    "name": "Wild Force Booster Box (sv5K)",
+    "image": "/images/Wild Force Booster Box (sv5K).png"
   }
 ]
