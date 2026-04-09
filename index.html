@@ -8,9 +8,11 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0d1117;--card:#161b22;--card-hover:#1c2333;--border:#30363d;--text:#e6edf3;--text-dim:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--modal-bg:#0d1117ee}
+[data-theme="light"]{--bg:#f0f2f5;--card:#ffffff;--card-hover:#f8f9fa;--border:#d0d7de;--text:#1f2328;--text-dim:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--modal-bg:#f0f2f5ee}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;min-height:100vh}
 header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .brand{display:flex;align-items:center;gap:12px}
+.brand-logo{width:48px;height:48px;border-radius:10px;object-fit:cover}
 .brand svg{width:32px;height:32px}
 .brand h1{font-size:20px;font-weight:700;background:linear-gradient(135deg,#58a6ff,#bc8cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .brand span{font-size:12px;color:var(--text-dim);display:block;margin-top:2px}
@@ -51,14 +53,20 @@ header{background:linear-gradient(135deg,#161b22,#1a1f2e);border-bottom:1px soli
 .chart-container{background:var(--bg);border-radius:8px;padding:16px}
 .chart-container h3{font-size:13px;color:var(--text-dim);margin-bottom:12px}
 .empty{text-align:center;padding:60px 24px;color:var(--text-dim);font-size:15px}
+.theme-toggle{background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--text);width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
 <body>
 <header>
   <div class="brand">
-    <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="15" stroke="#58a6ff" stroke-width="2"/><circle cx="16" cy="16" r="5" fill="#58a6ff"/><line x1="1" y1="16" x2="11" y2="16" stroke="#58a6ff" stroke-width="2"/><line x1="21" y1="16" x2="31" y2="16" stroke="#58a6ff" stroke-width="2"/></svg>
-    <div><h1>TCG Box Tracker</h1><span>Japanese Pokémon Booster Box Market</span></div>
+    <img src="/images/logo.png" alt="Collector's Paradise" class="brand-logo">
+    <div><h1>Collector's Paradise</h1><span>Japanese Pokémon Booster Box Market</span></div>
   </div>
+  <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode">
+    <svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
 </header>
 <div class="controls">
   <input class="search" type="text" placeholder="Search by name or set code..." id="search">
@@ -184,6 +192,14 @@ function openModal(name){
 document.getElementById("modal-close").onclick=()=>document.getElementById("modal").classList.remove("open");
 document.getElementById("modal").onclick=e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove("open")};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")document.getElementById("modal").classList.remove("open")});
+
+document.getElementById("theme-toggle").onclick=()=>{
+  const html=document.documentElement;
+  const isLight=html.getAttribute("data-theme")==="light";
+  html.setAttribute("data-theme",isLight?"dark":"light");
+  document.querySelector(".icon-moon").style.display=isLight?"block":"none";
+  document.querySelector(".icon-sun").style.display=isLight?"none":"block";
+};
 </script>
 </body>
 </html>
