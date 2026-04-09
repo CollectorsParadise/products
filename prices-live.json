@@ -1,1 +1,39 @@
-
+{
+  "lastUpdated": "2026-04-09T23:20:59.070Z",
+  "source": "eBay Sold Listings",
+  "products": {
+    "Scarlet ex Booster Box (sv1S)": {
+      "price": 74,
+      "low": 12,
+      "high": 220,
+      "mom": 0,
+      "history": [
+        74
+      ],
+      "salesCount": 77,
+      "updatedAt": "2026-04-09T23:20:59.070Z"
+    },
+    "Violet ex Booster Box (sv1V)": {
+      "price": 72,
+      "low": 56,
+      "high": 746,
+      "mom": 0,
+      "history": [
+        72
+      ],
+      "salesCount": 47,
+      "updatedAt": "2026-04-09T23:20:59.070Z"
+    },
+    "Triplet Beat Booster Box (sv1a)": {
+      "price": 95,
+      "low": 12,
+      "high": 250,
+      "mom": 0,
+      "history": [
+        95
+      ],
+      "salesCount": 65,
+      "updatedAt": "2026-04-09T23:20:59.070Z"
+    }
+  }
+}
