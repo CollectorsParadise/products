@@ -36,6 +36,7 @@ jobs:
             echo "No price changes to commit"
           else
             git commit -m "chore: update prices $(date -u +%Y-%m-%d_%H:%M)"
-            git pull --rebase
-            git push
+            git fetch origin main
+            git rebase origin/main || git rebase --abort
+            git push || git push --force-with-lease
           fi
