@@ -31,12 +31,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp prices-live.json /tmp/prices-live.json
+          git fetch origin main
+          git reset --hard origin/main
+          cp /tmp/prices-live.json prices-live.json
           git add prices-live.json
           if git diff --cached --quiet; then
             echo "No price changes to commit"
           else
             git commit -m "chore: update prices $(date -u +%Y-%m-%d_%H:%M)"
-            git fetch origin main
-            git rebase origin/main || git rebase --abort
-            git push || git push --force-with-lease
+            git push
           fi
