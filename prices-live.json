@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-04-09T23:20:59.070Z",
+  "lastUpdated": "2026-04-10T02:35:28.852Z",
   "source": "eBay Sold Listings",
   "products": {
     "Scarlet ex Booster Box (sv1S)": {
@@ -11,7 +11,7 @@
         74
       ],
       "salesCount": 77,
-      "updatedAt": "2026-04-09T23:20:59.070Z"
+      "updatedAt": "2026-04-10T02:35:28.852Z"
     },
     "Violet ex Booster Box (sv1V)": {
       "price": 72,
@@ -22,18 +22,40 @@
         72
       ],
       "salesCount": 47,
-      "updatedAt": "2026-04-09T23:20:59.070Z"
+      "updatedAt": "2026-04-10T02:35:28.852Z"
     },
     "Triplet Beat Booster Box (sv1a)": {
-      "price": 95,
-      "low": 12,
-      "high": 250,
+      "price": 97,
+      "low": 11,
+      "high": 200,
       "mom": 0,
       "history": [
-        95
+        97
       ],
-      "salesCount": 65,
-      "updatedAt": "2026-04-09T23:20:59.070Z"
+      "salesCount": 66,
+      "updatedAt": "2026-04-10T02:35:28.852Z"
+    },
+    "Clay Burst Booster Box (sv2D)": {
+      "price": 75,
+      "low": 14,
+      "high": 565,
+      "mom": 0,
+      "history": [
+        75
+      ],
+      "salesCount": 55,
+      "updatedAt": "2026-04-10T02:35:28.852Z"
+    },
+    "Snow Hazard Booster Box (sv2P)": {
+      "price": 73,
+      "low": 12,
+      "high": 189,
+      "mom": 0,
+      "history": [
+        73
+      ],
+      "salesCount": 51,
+      "updatedAt": "2026-04-10T02:35:28.852Z"
     }
   }
 }
