@@ -30,15 +30,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Get the current file SHA (if it exists)
           SHA=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/contents/prices-live.json" \
             | jq -r '.sha // empty')
 
-          # Base64 encode the file
           CONTENT=$(base64 -w 0 prices-live.json)
 
-          # Build JSON payload
           if [ -n "$SHA" ]; then
             PAYLOAD=$(jq -n --arg msg "chore: update prices $(date -u +%Y-%m-%d_%H:%M)" \
               --arg content "$CONTENT" \
@@ -50,7 +47,6 @@ jobs:
               '{message: $msg, content: $content}')
           fi
 
-          # Push via API
           HTTP_CODE=$(curl -s -o /tmp/response.json -w "%{http_code}" \
             -X PUT \
             -H "Authorization: Bearer $GH_TOKEN" \
@@ -59,9 +55,9 @@ jobs:
             -d "$PAYLOAD")
 
           if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
-            echo "✓ prices-live.json updated successfully"
+            echo "prices-live.json updated successfully"
           else
-            echo "✗ Failed with HTTP $HTTP_CODE"
+            echo "Failed with HTTP $HTTP_CODE"
             cat /tmp/response.json
             exit 1
           fi
