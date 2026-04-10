@@ -25,20 +25,43 @@ jobs:
 
       - name: Fetch eBay sold prices
         run: node scripts/fetch-prices.js
-        continue-on-error: false
 
-      - name: Commit updated prices
+      - name: Upload prices via GitHub API
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp prices-live.json /tmp/prices-live.json
-          git fetch origin main
-          git reset --hard origin/main
-          cp /tmp/prices-live.json prices-live.json
-          git add prices-live.json
-          if git diff --cached --quiet; then
-            echo "No price changes to commit"
+          # Get the current file SHA (if it exists)
+          SHA=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/prices-live.json" \
+            | jq -r '.sha // empty')
+
+          # Base64 encode the file
+          CONTENT=$(base64 -w 0 prices-live.json)
+
+          # Build JSON payload
+          if [ -n "$SHA" ]; then
+            PAYLOAD=$(jq -n --arg msg "chore: update prices $(date -u +%Y-%m-%d_%H:%M)" \
+              --arg content "$CONTENT" \
+              --arg sha "$SHA" \
+              '{message: $msg, content: $content, sha: $sha}')
           else
-            git commit -m "chore: update prices $(date -u +%Y-%m-%d_%H:%M)"
-            git push --force
+            PAYLOAD=$(jq -n --arg msg "chore: add prices $(date -u +%Y-%m-%d_%H:%M)" \
+              --arg content "$CONTENT" \
+              '{message: $msg, content: $content}')
+          fi
+
+          # Push via API
+          HTTP_CODE=$(curl -s -o /tmp/response.json -w "%{http_code}" \
+            -X PUT \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/contents/prices-live.json" \
+            -d "$PAYLOAD")
+
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
+            echo "✓ prices-live.json updated successfully"
+          else
+            echo "✗ Failed with HTTP $HTTP_CODE"
+            cat /tmp/response.json
+            exit 1
           fi
