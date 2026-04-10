@@ -40,5 +40,5 @@ jobs:
             echo "No price changes to commit"
           else
             git commit -m "chore: update prices $(date -u +%Y-%m-%d_%H:%M)"
-            git push
+            git push --force
           fi
